@@ -1,1 +1,1 @@
-# First experiance with ThreeJS
+# First experience with ThreeJS
