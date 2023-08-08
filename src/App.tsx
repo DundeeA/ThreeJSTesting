@@ -8,47 +8,62 @@ function App(){
 
   useEffect(() => {
    
+
+    //initalize scene
     const scene = new THREE.Scene();
+
+   //create camera
     const camera = new THREE.PerspectiveCamera(
      50,
      window.innerWidth / window.innerHeight,
      1,
      1000
-    );
-    camera.position.z = 96;
+    ); 
+    //position camera
+    camera.position.z = 110;
 
     const canvas = document.getElementById('myThreeJsCanvas')
+
+    //create renderer
     const renderer = new THREE.WebGLRenderer({
       canvas,
-      antialias: true
+      antialias: true,
+      alpha: true
     });
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor( 0xffffff, 0);
+
+    //canvas size
+    renderer.setSize(500,500);
+
     document.body.appendChild(renderer.domElement);
 
 
+    //lighting 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     ambientLight.castShadow = true;
     scene.add(ambientLight);
-
 
     const spotLight = new THREE.SpotLight(0xffffff,1);
     spotLight.castShadow = true;
     spotLight.position.set(0,64,32);
     scene.add(spotLight);
      
-    const boxG = new THREE.BoxGeometry(16,16,16);
+    //Adding Box
+    const boxG = new THREE.BoxGeometry(50,50,30);
     const boxMat = new THREE.MeshNormalMaterial();
     const boxMesh = new THREE.Mesh(boxG, boxMat);
     scene.add(boxMesh);
 
+
+    boxMesh.rotation.x = 5;
+    boxMesh.rotation.y = 0;
+    //rotating animation 
     const animate = () => {
-      boxMesh.rotation.x += 0.002;
-      boxMesh.rotation.y += 0.002; 
+      boxMesh.rotation.z += 0.002; 
       renderer.render(scene,camera);
       window.requestAnimationFrame(animate);
     };
- 
     animate(); 
   },[])
 

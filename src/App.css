@@ -6,10 +6,14 @@
 
 
 #app h1{ 
-  color: white;
   font-weight: 700;
   font-size: 4em;
-  z-index: 3; 
+  z-index: 3;  
 }
 
-#myThreeJsCanvas{z-index: -1;}
+#myThreeJsCanvas{
+  position: absolute;
+  top: 20%;
+  left: 36%;
+  z-index: -1;
+}
