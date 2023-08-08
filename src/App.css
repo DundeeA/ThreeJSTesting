@@ -5,7 +5,11 @@
 }
 
 
-#app h1{
+#app h1{ 
+  color: white;
   font-weight: 700;
   font-size: 4em;
+  z-index: 3; 
 }
+
+#myThreeJsCanvas{z-index: -1;}
