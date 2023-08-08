@@ -1,0 +1,11 @@
+#app{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+#app h1{
+  font-weight: 700;
+  font-size: 4em;
+}
