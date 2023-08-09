@@ -1,26 +1,23 @@
 import './App.css'
 import { useEffect } from 'react'
-import * as THREE from 'three' 
+import * as THREE from 'three'
 
-function App(){ 
-
- 
-
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+function App() {
   useEffect(() => {
-   
-
     //initalize scene
-    const scene = new THREE.Scene();
+    const scene = new THREE.Scene()
 
-   //create camera
+    //create camera
     const camera = new THREE.PerspectiveCamera(
-     50,
-     window.innerWidth / window.innerHeight,
-     1,
-     1000
-    ); 
+      90,
+      window.innerWidth / window.innerHeight,
+      1,
+      1000,
+    )
     //position camera
-    camera.position.z = 110;
+    camera.position.z = 3
+    camera.position.y = 2
 
     const canvas = document.getElementById('myThreeJsCanvas')
 
@@ -28,54 +25,63 @@ function App(){
     const renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: true,
-      alpha: true
-    });
-
-    renderer.setClearColor( 0xffffff, 0);
+      alpha: true,
+    })
 
     //canvas size
-    renderer.setSize(500,500);
+    renderer.setSize(window.innerWidth, window.innerHeight)
 
-    document.body.appendChild(renderer.domElement);
+    document.body.appendChild(renderer.domElement)
 
+    //lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+    ambientLight.castShadow = true
+    scene.add(ambientLight)
 
-    //lighting 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    ambientLight.castShadow = true;
-    scene.add(ambientLight);
+    const spotLight = new THREE.SpotLight(0xffffff, 1)
+    spotLight.castShadow = true
+    spotLight.position.set(0, 64, 32)
+    scene.add(spotLight)
 
-    const spotLight = new THREE.SpotLight(0xffffff,1);
-    spotLight.castShadow = true;
-    spotLight.position.set(0,64,32);
-    scene.add(spotLight);
-     
-    //Adding Box
-    const boxG = new THREE.BoxGeometry(50,50,30);
-    const boxMat = new THREE.MeshNormalMaterial();
-    const boxMesh = new THREE.Mesh(boxG, boxMat);
-    scene.add(boxMesh);
+    const loader = new GLTFLoader()
 
+    const textureLoader = new THREE.TextureLoader()
+    const alphaMap = textureLoader.load('./src/assets/opacitymap.png')
 
-    boxMesh.rotation.x = 5;
-    boxMesh.rotation.y = 0;
-    //rotating animation 
-    const animate = () => {
-      boxMesh.rotation.z += 0.002; 
-      renderer.render(scene,camera);
-      window.requestAnimationFrame(animate);
-    };
-    animate(); 
-  },[])
+    let earth1 = null
 
+    loader.load(
+      './src/assets/earth101.glb',
+      function (gltf: any) {
+        scene.add(gltf.scene)
+        earth1 = gltf.scene
 
-  return(
-   <div id='app'> 
-    <h1>Three JS</h1>
-   <canvas id='myThreeJsCanvas'/>
-   </div>
+        gltf.scene.children[0].material.alphaMap = alphaMap
+
+        console.log(gltf.scene.children[0].material)
+      },
+      undefined,
+      function (error: any) {
+        console.error(error)
+      },
+    )
+
+    function animate() {
+      requestAnimationFrame(animate)
+      renderer.render(scene, camera)
+
+      earth1.rotation.y += 0.002
+    }
+
+    animate()
+  }, [])
+
+  return (
+    <div id="app">
+      <h1>Three JS</h1>
+      <canvas id="myThreeJsCanvas" />
+    </div>
   )
-} 
-
-
+}
 
 export default App
